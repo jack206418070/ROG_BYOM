@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>BYOM - AISLAND</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://mapsystem3245.firebaseapp.com/css/normalize.css">
+  <link rel="stylesheet" href="https://mapsystem3245.firebaseapp.com/css/main.css">
+  <link rel="stylesheet" href="https://mapsystem3245.firebaseapp.com/css/animsition.min.css">
+  <style>
+    body {
+      background: #000;
+    }
+
+    #content {
+      width: 100%;
+      height: 100vh;
+      overflow: auto;
+      background: black;
+      display: flex;
+      overflow: hidden;
+    }
+
+    #header {
+      position: fixed;
+      width: 100%;
+      height: 60px;
+      background: black;
+      background-image: url(https://mapsystem3245.firebaseapp.com/img5/header.png);
+      background-repeat: no-repeat;
+      background-position: 0 50%;
+      background-size: contain;
+      z-index: 20000;
+    }
+
+    #map_keyboard {
+      position: fixed;
+      bottom: 25px;
+      right: 120px;
+      display: flex;
+      gap: 7px;
+      z-index: 30000;
+    }
+
+    #map_keyboard>div {
+      width: 50px;
+      height: 50px;
+      background-size: cover;
+      display: inline-block;
+    }
+
+    #map_keyboard>div:first-child {
+      position: relative;
+      top: -58px;
+      right: -114px;
+      background-image: url(https://mapsystem3245.firebaseapp.com/img6/button_top.png)
+    }
+
+    #map_keyboard>div:first-child+div {
+      background-image: url(https://mapsystem3245.firebaseapp.com/img6/button_left.png)
+    }
+
+    #map_keyboard>div:first-child+div+div {
+      background-image: url(https://mapsystem3245.firebaseapp.com/img6/button_bottom.png)
+    }
+
+    #map_keyboard>div:first-child+div+div+div {
+      background-image: url(https://mapsystem3245.firebaseapp.com/img6/button_right.png)
+    }
+
+    #left_chatbox {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 280px;
+      height: 347px;
+      z-index: 2001;
+      background-image: url(https://mapsystem3245.firebaseapp.com/img5/left_chatbox_open.png);
+      background-repeat: no-repeat;
+      background-position: bottom;
+      background-size: contain;
+      opacity: 0.6;
+    }
+
+    .npc_fixed_talk {
+      background-image: url(https://mapsystem3245.firebaseapp.com/img-use/Fixed_Dialog.png);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    #map {
+      top: 60px;
+      width: 2500px;
+      height: 1430px;
+      position: relative;
+      background-color: black;
+      flex-shrink: 0;
+      margin: auto;
+      background-image: url(./images/img5/new_bg.jpg);
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    /* #map::after {
+      content: "";
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      flex-shrink: 0;
+      margin: auto;
+      background-image: url(https://mapsystem3245.firebaseapp.com/img5/allmap-top-0223.png);
+      background-size: contain;
+      background-repeat: no-repeat;
+      z-index: 1000;
+    } */
+
+    .obj {
+      position: absolute;
+      z-index: 0;
+    }
+
+    .obj.see {
+      opacity: 1;
+    }
+
+    /*.obj.see:before{
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px 11px rgb(255 220 0 / 50%);
+    }*/
+    /*.obj.see:after{
+      content: "Twitter佈告欄↓";
+      position: absolute;
+      top: -66px;
+      right: 10%;
+      padding: 6px 12px;
+      background: #512b90;
+      color: #45fafd;
+      border: 3px solid #fd30fc;
+      border-radius: 10px;
+      font-size: 16px;
+      letter-spacing: 0.1em;
+      font-weight: bold;
+    }*/
+    #obj_4.obj.see:after {
+      content: "肖準行銷↑";
+      position: absolute;
+      bottom: -126px;
+      right: 10%;
+      padding: 6px 12px;
+      background: #512b90;
+      color: #45fafd;
+      border: 3px solid #fd30fc;
+      border-radius: 10px;
+      font-size: 16px;
+      letter-spacing: 0.1em;
+      font-weight: bold;
+    }
+
+    #obj_11.obj.see:after {
+      content: "↑AI繪圖";
+      top: unset;
+      bottom: -49px;
+      right: 0;
+      opacity: 1 !important;
+    }
+
+    /*#obj_1.obj.see:after{
+      content: "↑光HIKARI 酒店";
+      top: unset;
+      bottom: -49px;
+      right: -39px;
+      opacity: 1 !important;
+    }*/
+    /*#obj_3.obj.see:after{
+      content: "↓歡迎光臨";
+      width: 125px;
+      text-align: center;
+      right: -25px;
+      top: -48px;
+    }*/
+    #obj_6.obj.see:after {
+      content: "來一課 線上開課";
+      width: 175px;
+      text-align: center;
+      bottom: -49px;
+      right: -39px;
+      opacity: 1 !important;
+      position: absolute;
+      padding: 6px 12px;
+      background: #512b90;
+      color: #45fafd;
+      border: 3px solid #fd30fc;
+      border-radius: 10px;
+      font-size: 16px;
+      letter-spacing: 0.1em;
+      font-weight: bold;
+    }
+
+    #obj_11.obj.see {
+      opacity: 1;
+    }
+
+    #obj_11.obj.see:before {
+      z-index: -1;
+    }
+
+    .obj.see.into:before,
+    #obj_7.obj.see:before,
+    #obj_7.obj.see:after,
+    #obj_8.obj.see:before,
+    #obj_8.obj.see:after,
+    #obj_10.obj.see:before,
+    #obj_10.obj.see:after {
+      display: none;
+    }
+
+    .obj.into {
+      background: #7a4940;
+      opacity: 1;
+      animation: intoFade 800ms infinite;
+    }
+
+    @keyframes intoFade {
+      from {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+
+      to {
+        opacity: 0.3;
+      }
+    }
+
+    @keyframes Walkingwalking {
+      from {
+        top: 6%;
+      }
+
+      50% {
+        top: 28%;
+      }
+
+      to {
+        top: 6%;
+      }
+    }
+
+    @keyframes Walkingwalking-line {
+      from {
+        right: 9%;
+      }
+
+      50% {
+        right: 2%;
+      }
+
+      to {
+        right: 9%;
+      }
+    }
+
+    .obj img {
+      width: 100%;
+    }
+
+    .character {
+      position: absolute;
+      z-index: 1000;
+      filter: brightness(1.5);
+    }
+
+    .character img {
+      height: 100%;
+      filter: brightness(0.5);
+    }
+
+    #obj_1 {
+      opacity: 1 !important;
+      z-index: 10;
+    }
+
+    #obj_3 {
+      z-index: 11;
+    }
+
+    #obj_4 {
+      opacity: 1 !important;
+      z-index: 10;
+    }
+
+    #obj_4::before {
+      content: "";
+      width: calc(100% + 8px);
+      height: 30px;
+      bottom: -4px;
+      right: -4px;
+      background: #f4e9c5;
+      position: absolute;
+      border: 1px solid #1d1f1f;
+      border-top: none;
+    }
+
+    #obj_5 {
+      opacity: 1 !important;
+      z-index: 2;
+      border-radius: 5px;
+      border: 5px solid #321b15;
+    }
+
+    #obj_6 {
+      background: transparent !important;
+    }
+
+    #obj_8 {
+      right: 5.2%;
+      top: 34%;
+      width: 80px;
+      height: 146px;
+      opacity: 1;
+      background: transparent;
+      background-image: url(https://mapsystem3245.firebaseapp.com/demo-img/npc-inhouse.gif);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      padding: 0;
+      opacity: 0.85;
+      animation: Walkingwalking-line 4000ms infinite linear;
+    }
+
+    #obj_9 {
+      left: 4%;
+      top: 40%;
+      width: 80px;
+      height: 146px;
+      opacity: 1;
+      background: transparent;
+      background-image: url(https://mapsystem3245.firebaseapp.com/demo-img/npc-inhouse.gif);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      padding: 0;
+      opacity: 0.85;
+    }
+
+    #obj_10 {
+      left: 400px;
+      bottom: 258px;
+      width: 320px;
+      height: 250px;
+      background: transparent;
+      background-image: url(./images/img5/smoke.gif);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      padding: 0;
+      opacity: 1;
+      z-index: 1001;
+      /*animation: Walkingwalking 8000ms infinite linear;*/
+    }
+
+    /*#obj_100 {
+      left:30%;
+      top: 27%;
+      width: 5vw;
+      height: 30vh;
+      background: transparent;
+      background-image: url(./images/img5/lightbox0.gif);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      padding: 0;
+      opacity: 1;
+    }*/
+    #obj_101 {
+      left: 750px;
+      top: 386px;
+      width: 102px;
+      height: 315px;
+      background: transparent;
+      background-image: url(./images/img5/lightbox1.gif);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      padding: 0;
+      opacity: 1;
+    }
+
+    #obj_102 {
+      right: 550px;
+      top: 173px;
+      width: 102px;
+      height: 294px;
+      background: transparent;
+      background-image: url(./images/img5/lightbox1.gif);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      padding: 0;
+      opacity: 1;
+      transform: rotate(5deg);
+    }
+
+    #obj_103 {
+      right: 1075px;
+      top: 537px;
+      width: 123px;
+      height: 273px;
+      background: transparent;
+      background-image: url(./images/img5/lightbox3.gif);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      padding: 0;
+      opacity: 1;
+      z-index: 1001;
+    }
+
+    #obj_104 {
+      left: 1078px;
+      top: 271px;
+      width: 82px;
+      height: 220px;
+      background: transparent;
+      background-image: url(./images/img5/lightbox4.gif);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      padding: 0;
+      opacity: 1;
+      z-index: 1001;
+    }
+
+    #obj_201 {
+      transform: rotate(163deg);
+    }
+
+    #obj_203 {
+      transform: rotate(25deg);
+    }
+
+    #obj_12 {
+      right: 28%;
+      top: 23.7%;
+      width: 116px;
+      height: 207px;
+      background: transparent;
+      background-image: url(https://firebasestorage.googleapis.com/v0/b/school-uiui.appspot.com/o/web%2F1676489904.png?alt=media&token=f3988087-3d92-4bb9-9383-4c063e4360af);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      padding: 0;
+      opacity: 1;
+    }
+
+    #obj_4 iframe,
+    #obj_5 iframe {
+      position: relative;
+      z-index: 2;
+    }
+
+
+
+
+
+
+    .twitter-timeline.twitter-timeline-rendered {
+      height: 404px;
+      overflow: overlay;
+      border-radius: 15px;
+    }
+
+
+    #obj_50,
+    #obj_51,
+    #obj_52,
+    #obj_60,
+    #obj_61,
+    #obj_53,
+    #obj_54,
+    #obj_55,
+    #obj_62,
+    #obj_63 {
+      z-index: 2000;
+    }
+
+
+    #obj_53,
+    #obj_54,
+    #obj_55,
+    #obj_63 {
+      z-index: -10;
+      transition: opacity 0.5s;
+    }
+
+    #obj_53.show,
+    #obj_54.show,
+    #obj_55.show,
+    #obj_63.show {
+      opacity: 1;
+      z-index: 2005;
+    }
+
+    /* #obj_53.show:before,
+    #obj_54.show:before,
+    #obj_55.show:before,
+    #obj_63.show:before {
+      content: "×";
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      width: 35px;
+      height: 35px;
+      line-height: initial;
+      color: #ffffffc4;
+      border-radius: 100px;
+      border: 2px solid #EF7D00;
+      background: black;
+      z-index: 2001;
+      font-size: 20px;
+      text-align: center;
+      margin-left: -17px;
+    } */
+
+    #obj_53 {
+      opacity: 1 !important;
+      width: 550px;
+      position: absolute;
+      top: 36px;
+      right: 276px;
+    }
+
+    #obj_54 {
+      opacity: 1 !important;
+      width: 550px;
+      position: absolute;
+      top: 30px;
+      right: 1260px;
+    }
+
+    #obj_55 {
+      opacity: 1 !important;
+      width: 550px;
+      position: absolute;
+      top: 516px;
+      right: 170px;
+    }
+
+    #obj_62 {
+      opacity: 1 !important;
+      width: 550px;
+      position: absolute;
+      top: 470px;
+      right: 1570px;
+    }
+
+    #obj_63 {
+      opacity: 1 !important;
+      width: 550px;
+      position: absolute;
+      top: 470px;
+      right: 1570px;
+      /* top: 800px;
+      right: 425px; */
+    }
+
+    .chat {
+      margin: 0 auto;
+      width: 100%;
+      min-height: 190px;
+      background-color: rgba(0, 0, 0, 0.25);
+      padding: 27px 30px;
+      background-image: url(https://mapsystem3245.firebaseapp.com/img5/talkbox_bg.png);
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      position: relative;
+      z-index: 10;
+      transition: min-height .3s linear;
+      border-radius: 15px;
+      border: 1px solid #ef7d00;
+    }
+
+    .chat:before {
+      content: '';
+      position: absolute;
+      left: -3px;
+      top: -3px;
+      background: url(https://mapsystem3245.firebaseapp.com/img5/borderfour-up.png) no-repeat;
+      background-size: 100%;
+      background-position: 0 0;
+      width: calc(100% + 6px);
+      height: 20px;
+    }
+
+    .chat:after {
+      content: '';
+      position: absolute;
+      left: -3px;
+      bottom: -3px;
+      background: url(https://mapsystem3245.firebaseapp.com/img5/borderfour-down.png) no-repeat;
+      background-size: 100%;
+      background-position: 0 100%;
+      width: calc(100% + 6px);
+      height: 20px;
+    }
+
+    .chat.down {
+      max-height: 1000px;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 32px;
+      position: relative;
+      letter-spacing: 0.025em;
+    }
+
+    .chat-title {
+      flex: 1 1 auto;
+    }
+
+    .chat-title h3 {
+      background-size: contain;
+      background-position: 0 50%;
+      background-repeat: no-repeat;
+      margin-bottom: 17px;
+      width: 100%;
+      height: 26px;
+      margin-top: 0;
+    }
+
+    .chat-title h4 {
+      color: #fff;
+      font-size: 14px;
+      text-align: justify;
+      line-height: 1.4;
+      margin-bottom: 30px;
+    }
+
+    .chat-title h3.ctitle-gary {
+      background-image: url(https://mapsystem3245.firebaseapp.com/img5/gary_title.png);
+    }
+
+    .chat-title h3.ctitle-dj {
+      background-image: url(https://mapsystem3245.firebaseapp.com/img5/dj_title.png);
+    }
+
+    .chat-title h3.ctitle-rapper {
+      background-image: url(https://mapsystem3245.firebaseapp.com/img5/rapper_title.png);
+    }
+
+    .chat-title h3.ctitle-love {
+      background-image: url(https://mapsystem3245.firebaseapp.com/img5/love_title.png);
+    }
+
+    .chat-title h3.ctitle-artist {
+      background-image: url(https://mapsystem3245.firebaseapp.com/img5/artist_title.png);
+    }
+
+    .chat-title p {
+      color: #EF7D00;
+      font-size: 17px;
+      font-weight: 400;
+      text-align: justify;
+      line-height: 140%;
+      margin: 0;
+    }
+
+    .chat-title span {
+      color: #d7d7d7;
+      line-height: 160%;
+      margin: 12px 0 4px 0;
+      display: block;
+      max-height: 150px;
+      overflow-y: scroll;
+    }
+
+    #obj_63 .chat-title span {
+      overflow-y: unset;
+      max-height: unset;
+    }
+
+    #obj_63 .chat-title span img {
+      width: 50%;
+    }
+
+    .chat-title span::-webkit-scrollbar-track {
+      border: 1px solid #000;
+      padding: 2px 0;
+      background-color: #404040;
+    }
+
+    .chat-title span::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .chat-title span::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+      background-color: #737272;
+      border: 1px solid #000;
+    }
+
+    .chat-avatar {
+      flex: 0 0 72px;
+      height: 72px;
+      background-color: #000;
+      border-radius: 20px;
+    }
+
+    .chat-avatar img {
+      width: 100%;
+      object-fit: cover;
+      animation: Headmove 1500ms infinite linear;
+    }
+
+    @keyframes Headmove {
+      from {
+        transform: scale(1);
+      }
+
+      30% {
+        transform: scale(1.2);
+      }
+
+      60% {
+        transform: scale(1);
+      }
+
+      90% {
+        transform: scale(1.2);
+      }
+
+      to {
+        transform: scale(1);
+      }
+    }
+
+    .chat-badge {
+      position: absolute;
+      width: 85px;
+      height: 85px;
+      right: -12px;
+      top: -12px;
+      z-index: -1;
+    }
+
+    .chat-badge img {
+      width: 100%;
+      object-fit: contain;
+    }
+
+    .chat-prompt {
+      position: relative;
+    }
+
+    .chat-prompt-btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 87px;
+      height: 37px;
+      z-index: 100;
+      font-weight: bold;
+    }
+
+    .chat-prompt-btn img {
+      width: 20px;
+      object-fit: contain;
+      position: absolute;
+      right: 4px;
+      top: 10px;
+      z-index: 2;
+    }
+
+    .chat-prompt input#input-text {
+      outline: 1px solid transparent;
+      width: 100%;
+      height: 37px;
+      background-color: transparent;
+      border: 1px solid #ffffff;
+      padding: 9px 14px;
+      font-size: 14px;
+      color: #fff;
+      opacity: .6;
+      border-radius: 4px;
+      transition: opacity .5s, outline .5s;
+    }
+
+    .chat-prompt input#input-text:focus {
+      opacity: .8;
+      outline: 1px solid #A09292;
+    }
+
+    .gpt-box1,
+    .gpt-box2,
+    .gpt-box3,
+    .gpt-box4,
+    .gpt-box5 {
+      transition: opacity .5s;
+    }
+
+    .gpt-box1.hide,
+    .gpt-box2.hide,
+    .gpt-box3.hide,
+    .gpt-box4.hide,
+    .gpt-box5.hide {
+      opacity: 0;
+      z-index: -10;
+    }
+
+    .gpt-box1.show,
+    .gpt-box2.show,
+    .gpt-box3.show,
+    .gpt-box4.show,
+    .gpt-box5.show {
+      opacity: 1;
+      z-index: 2000;
+    }
+
+    input#input-send {
+      position: absolute;
+      outline: none;
+      border: none;
+      background: none;
+      font-weight: bold;
+      height: 100%;
+      letter-spacing: 0.2em;
+      padding: 0 0 0 20px;
+      text-align: left;
+      width: 100%;
+      z-index: 2;
+      font-size: 15px;
+      background: #9E9292;
+      color: white;
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+
+    input#input-send:hover {
+      cursor: pointer;
+      background: #EF7D00;
+    }
+
+    /* .chat-prompt input#input-send::before{
+      content: "";
+      position: absolute;
+      right: 4px;
+      top: 10px;
+      width: 20px;
+      height: 20px;
+      background: url(https://mapsystem3245.firebaseapp.com/img5/icon_send.png) no-repeat;
+      background-size: contain;
+      background-position: center;
+    } */
+    input#input-text::placeholder {
+      color: #c3c3c3 !important;
+    }
+
+    .loading {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto;
+      margin-top: 24px;
+      background: url(https://mapsystem3245.firebaseapp.com/img5/loading_gif.gif) no-repeat;
+      background-size: contain;
+      background-position: center;
+      opacity: 0.3;
+    }
+
+    @media(max-width:990px) {
+      #header {
+        height: 120px;
+        background-image: url(https://mapsystem3245.firebaseapp.com/img5/header_mobile.png);
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        background-size: contain;
+      }
+
+      #left_chatbox {
+        display: none;
+      }
+
+      #obj_53,
+      #obj_54,
+      #obj_55,
+      #obj_63 {
+        position: fixed;
+        top: unset;
+        bottom: 28px;
+        right: 0;
+        width: 95%;
+        margin: 0 2.5%;
+      }
+
+      #map_keyboard {
+        opacity: 0.3;
+        top: 42%;
+        bottom: unset;
+        z-index: 2004;
+        right: calc(50vw - 82px);
+      }
+
+      .chat-avatar {
+        display: none;
+      }
+    }
+
+    .chat-close {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      width: 35px;
+      height: 35px;
+      line-height: initial;
+      color: #ffffffc4;
+      border-radius: 100px;
+      border: 2px solid #EF7D00;
+      background: black;
+      z-index: 2001;
+      font-size: 20px;
+      text-align: center;
+      margin-left: -17px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body class="animsition">
+  <!--預先載入-->
+  <div style="display: none">
+    <img src="https://mapsystem3245.firebaseapp.com/img5/new_map.png">
+
+    <img src="./images/img5/down_0.png">
+    <img src="./images/img5/down_1.png">
+    <img src="./images/img5/down_2.png">
+    <img src="./images/img5/down_3.png">
+    <img src="./images/img5/down_4.png">
+    <img src="./images/img5/down_5.png">
+    <img src="./images/img5/down_6.png">
+    <img src="./images/img5/down_7.png">
+    <img src="./images/img5/right_0.png">
+    <img src="./images/img5/right_1.png">
+    <img src="./images/img5/right_2.png">
+    <img src="./images/img5/right_3.png">
+    <img src="./images/img5/right_4.png">
+    <img src="./images/img5/right_5.png">
+    <img src="./images/img5/right_6.png">
+    <img src="./images/img5/right_7.png">
+    <img src="./images/img5/left_0.png">
+    <img src="./images/img5/left_1.png">
+    <img src="./images/img5/left_2.png">
+    <img src="./images/img5/left_3.png">
+    <img src="./images/img5/left_4.png">
+    <img src="./images/img5/left_5.png">
+    <img src="./images/img5/left_6.png">
+    <img src="./images/img5/left_7.png">
+    <img src="./images/img5/up_0.png">
+    <img src="./images/img5/up_1.png">
+    <img src="./images/img5/up_2.png">
+    <img src="./images/img5/up_3.png">
+    <img src="./images/img5/up_4.png">
+    <img src="./images/img5/up_5.png">
+    <img src="./images/img5/up_6.png">
+    <img src="./images/img5/up_7.png">
+    <img src="./images/img5/up_8.png">
+    <img src="./images/img5/up_9.png">
+  </div>
+
+
+
+  <div id="content">
+    <div id="header"></div>
+    <div id="map">
+      <div v-for="(item,index) in character" :id="'character_' + item.id" class="character" :style="{ 
+        left: item.x + 'px',
+        top: item.y + 'px',
+        height: item.height + 'px'
+      }">
+        <!-- <img :src="character[0].src" :style="{transform: 'scale(' + item.scale + ')', transition: '0.5s', filter: 'blur(0) brightness(0.7)' }"> -->
+        <img :src="character[0].src"
+          :style="{ transform: 'scale(' + item.scale + ')', transition: '0.3s linear', filter: 'blur(' + (item.blur).toString() + 'px) brightness(0.5)' }">
+      </div>
+      <div v-for="(item,index) in obj" :id="'obj_' + item.id"
+        :class="{see : item._see, into : item.type == 'into', show : checkObjShow(item.id)}" class="obj" :style="{ 
+        left: item.x + 'px',
+        top: item.y + 'px',
+        width: item.width + 'px',
+        height: item.height + 'px'
+      }">
+        <div v-if="item.type == 'npc_ppl3'" class="npc_ppl3"></div>
+        <div v-if="item.type == 'lightbox0'" class="lightbox0"></div>
+        <div v-if="item.type == 'lightbox1'" class="lightbox1"></div>
+        <div v-if="item.type == 'lightbox2'" class="lightbox2"></div>
+        <div v-if="item.type == 'lightbox3'" class="lightbox3"></div>
+        <div v-if="item.type == 'lightbox4'" class="lightbox4"></div>
+      </div>
+    </div>
+    <div id="map_keyboard">
+      <div @touchstart="vm.keyState['_38'] = true" @touchend="vm.keyState['_38'] = true"
+        @mousedown="vm.keyState['_38'] = true" @mouseup="vm.keyState['_38'] = false"></div>
+      <div @touchstart="vm.keyState['_37'] = true" @touchend="vm.keyState['_37'] = true"
+        @mousedown="vm.keyState['_37'] = true" @mouseup="vm.keyState['_37'] = false"></div>
+      <div @touchstart="vm.keyState['_40'] = true" @touchend="vm.keyState['_40'] = true"
+        @mousedown="vm.keyState['_40'] = true" @mouseup="vm.keyState['_40'] = false"></div>
+      <div @touchstart="vm.keyState['_39'] = true" @touchend="vm.keyState['_39'] = true"
+        @mousedown="vm.keyState['_39'] = true" @mouseup="vm.keyState['_39'] = false"></div>
+    </div>
+    <div id="left_chatbox"></div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.22/vue.min.js"></script>
+  <script src="https://webfile-68.web.app/coloradmin/assets/plugins/jquery/jquery-1.9.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.0/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.0/ScrollToPlugin.min.js"></script>
+  <script src="https://mapsystem3245.firebaseapp.com/js/animsition.min.js"></script>
+
+  <script>
+    var move_distance = 60; //移動像素
+    var move_duration = 0.3 //移動時間
+    const move_speed = 1800 //走路擺動
+    var last_move = 20 // 最後移動的間距微調
+
+    let moveing = false;
+    let moveing_previous //前一個移動的方向
+    let moveing_setTimeout
+    let object_view = 150; //判斷物體是否觸發的視野
+
+    var screen_width = $(window).width();
+    var screen_height = $(window).height();
+
+    //暫存角色的 width height
+    var character_me_width
+    var character_me_height
+    var map_height
+    let into_id = ""; //進入點的 id
+
+    var vm = new Vue({
+      el: '#content',
+      data: {
+        keyState: {
+          _38: false,
+          _37: false,
+          _39: false,
+          _40: false
+        },
+        character: [{
+          id: "me",
+          src: "./images/img5/down_0.png",
+          col_frame_number: 8,
+          row_frame_number: 8,
+          width: 120,
+          height: 150,
+          x: 1020,
+          y: 820,
+          hit_top: 30,
+          hit_left: 100,
+          hit_bottom: 150,
+          hit_right: 100,
+          scale: 1,
+          blur: 0.3,
+        }],
+        obj: [
+          // {
+          //   id: 1,
+          //   src: "",
+          //   x: 1989,
+          //   y: 174,
+          //   width: 451,
+          //   height: 150,
+          //   _see: false
+          // }, {
+          //   id: 3,
+          //   src: "",
+          //   x: 0,
+          //   y: 204,
+          //   width: 39,
+          //   height: 114,
+          //   _see: false,
+          //   url: "new_index_into_0209.html",
+          //   type: "into"
+          // },
+          // {
+          //   id:5,
+          //   src:"",
+          //   x: 918,
+          //   y: 749,
+          //   width: 350,
+          //   height: 414,
+          //   _see : true,
+          //   type: "twitter22"
+          // },
+          // {
+          //   id: 8,
+          //   src: "",
+          //   _see : true,
+          //   type: "npc_ppl",
+          // },
+          // {
+          //   id: 9,
+          //   src: "",
+          //   _see : true,
+          //   type: "npc_ppl2",
+          // },
+          {
+            id: 10,
+            src: "",
+            _see: true,
+            type: "npc_ppl3",
+          },
+          {
+            id: 100,
+            src: "",
+            _see: true,
+            type: "lightbox0",
+          },
+          {
+            id: 101,
+            src: "",
+            _see: true,
+            type: "lightbox1",
+          },
+          {
+            id: 102,
+            src: "",
+            _see: true,
+            type: "lightbox2",
+          },
+          {
+            id: 103,
+            src: "",
+            _see: true,
+            type: "lightbox3",
+          },
+          {
+            id: 104,
+            src: "",
+            _see: true,
+            type: "lightbox4",
+          },
+          // {
+          //   id: 11,
+          //   src:"",
+          //   x: 1400,
+          //   y: 156,
+          //   width: 350,
+          //   height: 380,
+          //   _see : false,
+          //   type: "draw-gpt"
+          // },
+          // {
+          //   id: 12,
+          //   src: "",
+          //   _see : false,
+          //   type: "npc_ppl",
+          // }
+          {
+            id: 200,
+            src: "",
+            x: 1430,
+            y: 384,
+            width: 1080,
+            height: 520,
+            _see: false
+          },
+          {
+            id: 201,
+            src: "",
+            x: 1334,
+            y: 372,
+            width: 160,
+            height: 520,
+            _see: false
+          },
+          {
+            id: 202,
+            src: "",
+            x: 100,
+            y: 384,
+            width: 880,
+            height: 520,
+            _see: false
+          },
+          {
+            id: 203,
+            src: "",
+            x: 880,
+            y: 332,
+            width: 160,
+            height: 560,
+            _see: false
+          },
+          {
+            id: 204,
+            src: "",
+            x: 1000,
+            y: 332,
+            width: 320,
+            height: 260,
+            _see: false
+          },
+        ],
+        chatSet: {
+          '50': {
+            status: false,
+            class: 'gpt-box1',
+            text: '',
+            prompt: '',
+            input_prompt: ''
+          },
+          '51': {
+            status: false,
+            class: 'gpt-box2',
+            text: '',
+            prompt: '',
+            input_prompt: ''
+          },
+          '52': {
+            status: false,
+            class: 'gpt-box3',
+            text: '',
+            prompt: '',
+            input_prompt: ''
+          },
+          '61': {
+            status: false,
+            class: 'gpt-box5',
+            img: '',
+            prompt: '',
+            input_prompt: ''
+          }
+        },
+        is_loading: false
+      },
+      methods: {
+        chatControl(id) {
+          for (const doc in this.chatSet) {
+            this.chatSet[doc].status = false
+            this.chatSet[doc].text = ''
+            this.chatSet[doc].prompt = ''
+          }
+          this.chatSet[id].input_prompt = ''
+          this.chatSet[id].status = !this.chatSet[id].status
+        },
+        closeChat(id) {
+          if (id != 63) {
+            let npc_id = '' + (id - 3)
+            this.chatSet[npc_id].status = false
+          } else {
+            let npc_id = '' + (id - 2)
+            this.chatSet[npc_id].status = false
+          }
+        },
+        chatPrompt(chat_id, npc_id, type) {
+          this.is_loading = true
+          if (type !== 'draw' && this.chatSet[npc_id].text != '' && this.chatSet[npc_id].prompt != '') {
+            this.chatSet[npc_id].text = ''
+            this.chatSet[npc_id].prompt = ''
+          } else if (type == 'draw' && this.chatSet[npc_id].img != '' && this.chatSet[npc_id].prompt != '') {
+            this.chatSet[npc_id].img = ''
+            this.chatSet[npc_id].prompt = ''
+          }
+          axios.post('https://shohumask.shop/api/gpt', data = { 'prompt': this.chatSet[npc_id].input_prompt, 'type': type })
+            .then(res => {
+              this.is_loading = false
+              if (type !== 'draw') {
+                this.chatSet[npc_id].prompt = this.chatSet[npc_id].input_prompt
+                this.chatSet[npc_id].text = res.data.text
+              } else {
+                this.chatSet[npc_id].prompt = this.chatSet[npc_id].input_prompt
+                this.chatSet[npc_id].img = res.data.text[0].url
+              }
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        }
+      },
+      computed: {
+        checkObjShow() {
+          return function (id) {
+            if (id == 53) {
+              return this.chatSet['50'].status == true ? true : false
+            } else if (id == 54) {
+              return this.chatSet['51'].status == true ? true : false
+            } else if (id == 55) {
+              return this.chatSet['52'].status == true ? true : false
+            } else if (id == 63) {
+              return this.chatSet['61'].status == true ? true : false
+            }
+          }
+        }
+      },
+      watch: {
+        "keyState._38": function (data) {
+          if (data) return move(38)
+        },
+        "keyState._37": function (data) {
+          if (data) return move(37)
+        },
+        "keyState._39": function (data) {
+          if (data) return move(39)
+        },
+        "keyState._40": function (data) {
+          if (data) return move(40)
+        }
+      }
+    })
+
+    //gsap 初始化設定
+    //https://greensock.com/cheatsheet/
+    //https://greensock.com/docs/v2/Easing
+
+    gsap.config({
+      force3D: true
+    })
+    gsap.defaults({
+      ease: Power0.easeNone
+      //ease: Bounce.easeOut 
+    });
+
+    $(function () {
+      character_load();
+    })
+
+    function character_load() {
+      //將 map 的捲軸移到主角的位置
+      character_me_width = $("#character_me").width();
+      character_me_height = $("#character_me").height();
+      map_height = $("#map").height()
+
+      var _x = $("#character_me").offset().left - (screen_width / 2) + character_me_width / 2;
+      var _y = $("#character_me").offset().top - (screen_height / 2) + character_me_width / 2;
+      gsap.to("#content", {
+        duration: 0, scrollTo: { y: _y, x: _x }, onComplete: function () {
+          $("body").keydown(function (event) {
+            if (event.keyCode == 32) return jump();
+            if (event.keyCode == 13) return read();
+            vm.keyState["_" + event.keyCode] = true;
+          })
+          $("body").keyup(function (event) {
+            vm.keyState["_" + event.keyCode] = false;
+          })
+        }
+      });
+    }
+    function get_people_x() {
+      return vm.character[0].x + gsap.getProperty("#character_me", "x");
+    }
+    function get_people_y() {
+      // console.log(gsap.getProperty("#character_me", "y"))
+      return vm.character[0].y + gsap.getProperty("#character_me", "y");
+    }
+    function collision(which, people_x, people_y) {
+      let hit_object = [];
+      if (which == "37" || which == "39") {//左右
+        for (var i = 0; i < vm.obj.length; i++) {
+          //初始值調整
+          vm.obj[i]._see = false
+
+          var obj_y1 = vm.obj[i].y; //沒加至點
+          var obj_y2 = vm.obj[i].y + vm.obj[i].height; //沒加至點
+          var obj_x1 = vm.obj[i].x; //沒加至點
+          var obj_x2 = vm.obj[i].x + vm.obj[i].width; //沒加至點
+
+          var view_obj_y1 = obj_y1 - object_view
+          var view_obj_y2 = obj_y2 + object_view
+          var view_obj_x1 = obj_x1 - object_view
+          var view_obj_x2 = obj_x2 + object_view
+
+          if (which == "37") {//往左
+            var people_xx1 = people_x + vm.character[0].hit_left - move_distance;
+            console.log(people_xx1, view_obj_x1, people_xx1 > view_obj_x1)
+            console.log(people_xx1, view_obj_x2, people_xx1 < view_obj_x2)
+            // 判斷視野
+            if (people_xx1 > view_obj_x1 && people_xx1 < view_obj_x2) {
+              var people_y = get_people_y();
+              var people_yy1 = people_y + vm.character[0].hit_top
+              var people_yy2 = people_y + vm.character[0].hit_bottom
+              if (people_yy1 < view_obj_y2 && people_yy2 > view_obj_y1) {
+                console.log(i, vm.obj[i]._see)
+                vm.obj[i]._see = true
+                console.log(i, vm.obj[i]._see)
+              }
+            }
+
+            if (people_xx1 > obj_x1 && people_xx1 < obj_x2) {
+              var people_yy1 = people_y + vm.character[0].hit_top
+              var people_yy2 = people_y + vm.character[0].hit_bottom
+              if (people_yy1 < obj_y2 && people_yy2 > obj_y1) {
+                hit_object.push({
+                  ...vm.obj[i],
+                  last_distance: (people_x + vm.character[0].hit_left) - obj_x2
+                })
+              }
+            }
+          }
+          if (which == "39") {//往右
+            var people_xx2 = people_x + vm.character[0].hit_right + move_distance;
+
+            console.log(people_xx2, view_obj_x1, people_xx2 > view_obj_x1)
+            console.log(people_xx2, view_obj_x2, people_xx2 < view_obj_x2)
+            // 判斷視野
+            if (people_xx2 > view_obj_x1 && people_xx2 < view_obj_x2) {
+              var people_y = get_people_y();
+              var people_yy1 = people_y + vm.character[0].hit_top
+              var people_yy2 = people_y + vm.character[0].hit_bottom
+              if (people_yy1 < view_obj_y2 && people_yy2 > view_obj_y1) {
+                console.log(i, vm.obj[i]._see)
+                vm.obj[i]._see = true
+              }
+
+            }
+
+            if (people_xx2 > obj_x1 && people_xx2 < obj_x2) {
+              var people_yy1 = people_y + vm.character[0].hit_top
+              var people_yy2 = people_y + vm.character[0].hit_bottom
+              if (people_yy1 < obj_y2 && people_yy2 > obj_y1) {
+                hit_object.push({
+                  ...vm.obj[i],
+                  last_distance: obj_x1 - (people_x + vm.character[0].hit_right)
+                })
+              }
+            }
+
+
+          }
+        }
+      }
+      if (which == "38" || which == "40") {//上下
+        for (var i = 0; i < vm.obj.length; i++) {
+          vm.obj[i]._see = false
+
+          var obj_y1 = vm.obj[i].y; //沒加至點
+          var obj_y2 = vm.obj[i].y + vm.obj[i].height; //沒加至點
+          var obj_x1 = vm.obj[i].x; //沒加至點
+          var obj_x2 = vm.obj[i].x + vm.obj[i].width; //沒加至點
+
+          var view_obj_y1 = obj_y1 - object_view
+          var view_obj_y2 = obj_y2 + object_view
+          var view_obj_x1 = obj_x1 - object_view
+          var view_obj_x2 = obj_x2 + object_view
+
+          if (which == "38") {//往上
+            var people_yy1 = people_y + vm.character[0].hit_top - move_distance;
+
+            // 判斷視野
+            if (people_yy1 < view_obj_y2 && people_yy1 > view_obj_y1) {
+              var people_xx1 = people_x + vm.character[0].hit_left;
+              var people_xx2 = people_x + vm.character[0].hit_right
+              if (people_xx1 < view_obj_x2 && people_xx2 > view_obj_x1) {
+                vm.obj[i]._see = true
+              }
+            }
+
+            if (people_yy1 < obj_y2 && people_yy1 > obj_y1) {
+              console.log('有碰撞測試')
+              var people_xx1 = people_x + vm.character[0].hit_left;
+              var people_xx2 = people_x + vm.character[0].hit_right
+              if (people_xx1 < obj_x2 && people_xx2 > obj_x1) {
+                hit_object.push({
+                  ...vm.obj[i],
+                  last_distance: (people_y + vm.character[0].hit_top) - obj_y2
+                })
+              }
+            }
+          }
+          if (which == "40") {//往下
+            var people_yy2 = people_y + vm.character[0].hit_bottom + move_distance;
+
+            // 判斷視野
+            if (people_yy2 > view_obj_y1 && people_yy2 < view_obj_y2) {
+              var people_xx1 = people_x + vm.character[0].hit_left;
+              var people_xx2 = people_x + vm.character[0].hit_right
+              if (people_xx1 < view_obj_x2 && people_xx2 > view_obj_x1) {
+                vm.obj[i]._see = true
+              }
+            }
+
+            if (people_yy2 > obj_y1 && people_yy2 < obj_y2) {
+              console.log('有碰撞測試')
+              var people_x = get_people_x();
+              var people_xx1 = people_x + vm.character[0].hit_left;
+              var people_xx2 = people_x + vm.character[0].hit_right
+              if (people_xx1 < obj_x2 && people_xx2 > obj_x1) {
+                hit_object.push({
+                  ...vm.obj[i],
+                  last_distance: obj_y1 - (people_y + vm.character[0].hit_bottom)
+                })
+              }
+            }
+          }
+        }
+      }
+
+      return {
+        hit_object,
+        people_x,
+        people_y
+      }
+    }
+    function clear_move(direction) {
+      clearTimeout(moveing_setTimeout);
+      moveing = false;
+      img_name = 'png'
+      if (direction == 'left' || direction == 'right') img_name = 'png'
+      if (direction) $("#character_me img").attr("src", `./images/img5/${direction}_0.${img_name}`);
+    }
+    function role_move(direction, step, full) {
+      if (step === false) return clear_move(direction)
+      moveing = true;
+      let move_step = step || 0;
+      img_name = 'png'
+      if (direction == 'left' || direction == 'right') img_name = 'png'
+      vm.character[0].src = `./images/img5/${direction}_${move_step}.${img_name}`;
+      var _second = full ? move_speed : move_speed * 2;
+      let frame_number = vm.character[0].row_frame_number
+      if (direction == 'up' || direction == 'down') {
+        frame_number = vm.character[0].col_frame_number
+      }
+      moveing_setTimeout = setTimeout(function () {
+        step = step + 1;
+        if (step >= frame_number) step = false;
+        return role_move(direction, step, full)
+      }, (move_duration / (frame_number - 1)) * _second)
+    }
+    function get_direction(which) {
+      if (which == "38") return "up";
+      if (which == "40") return "down";
+      if (which == "37") return "left"
+      if (which == "39") return "right"
+    }
+    function move(which) {
+      if (into_id) return; //有進入點
+
+      var people_x = get_people_x();
+      var people_y = get_people_y();
+
+      //如果方向不一致，則把動畫清掉
+      if (moveing_previous != which) clear_move();
+      moveing_previous = which;
+
+      //每次移動前判斷是否有碰撞
+      let _collision = collision(which, people_x, people_y);
+      var distance = move_distance; //這次要移動的間距
+      if (_collision.hit_object.length) { //代表有碰撞
+        for (var i = 0; i < _collision.hit_object.length; i++) {
+          if (_collision.hit_object[i].last_distance <= distance) {
+            distance = _collision.hit_object[i].last_distance;
+          }
+          if (_collision.hit_object[i].type == "into") {
+            into_id = "obj_" + _collision.hit_object[i].id;
+            distance = move_distance;
+            break;
+          }
+        }
+        if (distance < last_move) { //假如能移動的距離太小就不移動了
+          gsap.killTweensOf("#character_me");
+          gsap.killTweensOf("#content");
+          clear_move(get_direction(which));
+          return;
+        }
+      }
+
+      if (which == "38") {//上
+        if (get_people_y() < 680) {
+          move_distance = 60 / (860 / (get_people_y() - 100)); //移動像素
+          move_duration = 0.30 / ((get_people_y() - 80) / 820);
+          last_move = 6 / (860 / (get_people_y())); // 最後移動的間距微調
+        } else {
+          move_distance = 60; //移動像素
+          move_duration = 0.30 //移動時間
+          last_move = 20 // 最後移動的間距微調
+        }
+        if (get_people_y() < 680) {
+          vm.character[0].blur = (vm.character[0].y / get_people_y()) + (0.1 / (get_people_y() / vm.character[0].y))
+        } else {
+          vm.character[0].blur = 0.3
+        }
+
+        if ((get_people_y() / vm.character[0].y < 1) && (which == '38' || which == '40')) {
+          vm.character[0].scale = (get_people_y() / vm.character[0].y) - (0.1 / (get_people_y() / vm.character[0].y))
+        } else if ((get_people_y() / vm.character[0].y >= 1) && (which == '38' || which == '40')) {
+          vm.character[0].scale = 1
+        }
+        gsap.to("#character_me", {
+          y: `-=${distance}`,
+          overwrite: true,
+          duration: move_duration,
+          onStart: function () { },
+          onComplete: function () {
+            if (into_id) return $("#" + into_id + ">a").trigger("click")
+            setTimeout(function () {
+              if (vm.keyState._38) move(38)
+            }, 5)
+          },
+          onUpdate: function () {
+            if (!moveing) role_move("up", 1, distance == move_distance);
+          }
+        })
+
+        if (map_height - people_y - screen_height / 2 - character_me_height / 2 > 0) {
+          gsap.to("#content", {
+            duration: move_duration,
+            overwrite: true,
+            scrollTo: { y: `-=${distance}` }
+          });
+        }
+      } else if (which == "40") {//下
+        if (get_people_y() < 680) {
+          move_distance = 60 / (860 / get_people_y()); //移動像素
+          move_duration = 0.40 / (get_people_y() / 860);
+          last_move = 12 // 最後移動的間距微調
+          console.log(move_distance, move_duration)
+        } else {
+          move_distance = 60; //移動像素
+          move_duration = 0.30 //移動時間
+          last_move = 20 // 最後移動的間距微調
+        }
+        if (get_people_y() < 680) {
+          vm.character[0].blur = (vm.character[0].y / get_people_y()) + (0.1 / (get_people_y() / vm.character[0].y))
+        } else {
+          vm.character[0].blur = 0.3
+        }
+        // vm.character[0].blur = (vm.character[0].y / get_people_y()) + (0.1 / (get_people_y() / vm.character[0].y))
+        if ((get_people_y() / vm.character[0].y < 1) && (which == '38' || which == '40')) {
+          vm.character[0].scale = (get_people_y() / vm.character[0].y) - (0.1 / (get_people_y() / vm.character[0].y))
+          console.log(vm.character[0].scale, get_people_y(), vm.character[0].y)
+        } else if ((get_people_y() / vm.character[0].y >= 1) && (which == '38' || which == '40')) {
+          vm.character[0].scale = 1
+        }
+        gsap.to("#character_me", {
+          y: `+=${distance}`,
+          overwrite: true,
+          duration: move_duration,
+          onStart: function () { },
+          onComplete: function () {
+            if (into_id) return $("#" + into_id + ">a").trigger("click")
+            setTimeout(function () {
+              if (vm.keyState._40) move(40)
+            }, 5)
+          },
+          onUpdate: function () {
+            if (!moveing) role_move("down", 1, distance == move_distance);
+          }
+        })
+
+        if (people_y > screen_height / 2 - character_me_height / 2) {
+          gsap.to("#content", {
+            duration: move_duration,
+            overwrite: true,
+            scrollTo: { y: `+=${distance}` }
+          });
+        }
+      } else if (which == "37") {//左
+        gsap.to("#character_me", {
+          x: `-=${distance}`,
+          overwrite: true,
+          duration: move_duration,
+          onComplete: function () {
+            if (into_id) return $("#" + into_id + ">a").trigger("click")
+            setTimeout(function () {
+              if (vm.keyState._37) move(37)
+            }, 5)
+          },
+          onStart: function () { },
+          onUpdate: function () {
+            if (!moveing) role_move("left", 1, distance == move_distance);
+          }
+        })
+
+        if ($("#map").width() - people_x - screen_width / 2 - character_me_width / 2 > 0) {
+          gsap.to("#content", {
+            duration: move_duration,
+            overwrite: true,
+            scrollTo: { x: `-=${distance}` }
+          });
+        }
+
+      } else if (which == "39") {//右
+        gsap.to("#character_me", {
+          x: `+=${distance}`,
+          overwrite: true,
+          duration: move_duration,
+          onComplete: function () {
+            if (into_id) return $("#" + into_id + ">a").trigger("click")
+            setTimeout(function () {
+              if (vm.keyState._39) move(39)
+            }, 5)
+          },
+          onStart: function () { },
+          onUpdate: function () {
+            if (!moveing) role_move("right", 1, distance == move_distance);
+          }
+        })
+        if (people_x > screen_width / 2 - character_me_width / 2) {
+          gsap.to("#content", {
+            duration: move_duration,
+            overwrite: true,
+            scrollTo: { x: `+=${distance}` }
+          });
+        }
+
+      }
+    }
+    function read() {
+      for (var i = 0; i < vm.obj.length; i++) {
+        if (vm.obj[i]._see) {
+          //讀取這個物件的訊息
+        }
+      }
+    }
+    function jump() {//角色跳躍
+      //    gsap.to("#character_me",{
+      //      y: `-=50`,
+      //      duration : .4,
+      //      onComplete:function(){
+      //        
+      //      },
+      //      onStart:function(){},
+      //      onUpdate:function(){}
+      //    })
+    }
+
+    //http://git.blivesta.com/animsition
+    $(document).ready(function () {
+      $(".animsition").animsition({
+        inClass: 'fade-in',
+        outClass: 'fade-out',
+        inDuration: 1500,
+        outDuration: 800,
+        linkElement: '.animsition-link',
+        // e.g. linkElement: 'a:not([target="_blank"]):not([href^="#"])'
+        loading: true,
+        loadingParentElement: 'body', //animsition wrapper element
+        loadingClass: 'animsition-loading',
+        loadingInner: '', // e.g '<img src="loading.svg" />'
+        timeout: false,
+        timeoutCountdown: 5000,
+        onLoadEvent: true,
+        browser: ['animation-duration', '-webkit-animation-duration'],
+        // "browser" option allows you to disable the "animsition" in case the css property in the array is not supported by your browser.
+        // The default setting is to disable the "animsition" in a browser that does not support "animation-duration".
+        overlay: false,
+        overlayClass: 'animsition-overlay-slide',
+        overlayParentElement: 'body',
+        transition: function (url) { window.location.href = url; }
+      });
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/all.css" class="css">
+</head>
+<body class="cursor-class">
+  <div id="app">
+    <header>
+      <div class="logo">
+        <a href="#">
+          <img src="./images/rog-logo.png" alt="">
+        </a>
+      </div>
+      <nav>
+        <a href="#" class="nav-item line">
+          <img src="./images/header-icon1.png" alt="">
+          <span>Map</span>
+        </a>
+        <a href="#" class="nav-item">
+          <img src="./images/header-icon3.png" alt="">
+          <span>Asus Sky Tower.</span>
+        </a>
+        <a href="#" class="nav-item">
+          <img src="./images/header-icon2.png" alt="">
+          <span>U.A. Commerce.</span>
+        </a>
+        <a href="#" class="nav-item">
+          <img src="./images/header-icon2.png" alt="">
+          <span>Electronic store</span>
+        </a>
+        <a href="#" class="nav-item">
+          <img src="./images/header-icon4.png" alt="">
+          <span>Equipment</span>
+        </a>
+        <a href="#" class="nav-item">
+          <img src="./images/header-icon5.png" alt="">
+          <span>Paradise Square</span>
+        </a>
+      </nav>
+      <div class="connect-wallet">
+        <a href="#" class="connect-btn">
+          <img src="./images/header-icon6.png" alt="">
+          <span>Connect Wallet</span>
+        </a>
+      </div>
+    </header>
+    <div class="container">
+      <div class="game-room">
+        <div class="outer-line outer-line-1" @click="seletItem('1')">
+          <img src="./images/outer-line-1.png" alt="">
+        </div>
+        <div class="outer-line outer-line-2" @click="seletItem('2')">
+          <img src="./images/outer-line-2.png" alt="">
+        </div>
+        <div class="outer-line outer-line-3" @click="seletItem('3')">
+          <img src="./images/outer-line-3.png" alt="">
+        </div>
+        <div class="outer-line outer-line-4" @click="seletItem('4')">
+          <img src="./images/outer-line-4.png" alt="">
+        </div>
+        <div class="outer-line outer-line-5" @click="seletItem('5')">
+          <img src="./images/outer-line-5.png" alt="">
+        </div>
+        <div class="bg"></div>
+        <div class="top-block">
+          <a href="#" class="back">
+            <img src="./images/arrow-right.png" alt="">
+            <span>Back</span>
+          </a>
+          <div class="welcome">
+            <img src="./images/welcome.png" alt="">
+          </div>
+        </div>
+        <div class="task-block">
+          <div class="task-title">
+            <div class="task-all">
+              <p>A wallet can only receive up to two NFTs via Airdrop. (0 / 2)</p>
+            </div>
+            <div class="task-item">
+              <span>
+                <p class="check"></p>
+              </span>
+              <p>Talk to the owner of the electronic grocery store.</p>
+            </div>
+            <div class="task-item">
+              <span>
+                <p class="check"></p>
+              </span>
+              <p>Collect all cool items. (0 / 10)</p>
+            </div>
+          </div>
+        </div>
+        <div class="npc">
+          <div class="tag-box cursor-class">
+            <img src="./images/Tag.png" alt="">
+          </div>
+          <img src="./images/room_npc.png" alt="boss">
+        </div>
+        <div class="card-block">
+          <div class="card-item">
+            <img src="./images/card-gray.png" alt="">
+          </div>
+          <div class="card-item">
+            <img v-if="checkItmeGet('2') == false" src="./images/card-gray.png" alt="">
+            <img v-else src="./images/cool-item1.png" alt="">
+          </div>
+          <div class="card-item">
+            <img src="./images/card-gray.png" alt="">
+          </div>
+          <div class="card-item">
+            <img v-if="checkItmeGet('4') == false" src="./images/card-gray.png" alt="">
+          </div>
+          <div class="card-item">
+            <img src="./images/card-gray.png" alt="">
+          </div>
+          <div class="card-item">
+            <img src="./images/card-gray.png" alt="">
+          </div>
+          <div class="card-item">
+            <img src="./images/card-gray.png" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+  const app = Vue.createApp({
+    data () {
+      return {
+        selete_item: [],
+        task_data: {
+          "1": false,
+          "2": false
+        },
+        npc_talk: false
+      }
+    },
+    methods: {
+      seletItem (item_id) {
+        console.log(1)
+        setTimeout( () => {
+          this.selete_item.push(item_id)
+          this.task_data[item_id] = true
+        }, 3000)
+      }
+    },
+    computed: {
+      checkItmeGet () {
+        return function (e) {
+          if (this.selete_item.includes(e)) {
+            return true
+          } else {
+            return false
+          }
+        }
+      }
+    }
+  })
+  app.mount('#app')
+</script>
+</html>
